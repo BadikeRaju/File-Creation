@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic File Creator</title>
+    <style>
+        /* Styles */
+    </style>
+</head>
+<body>
+    <h1>Dynamic File Creator</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <!-- Number of Files Input -->
+        <div class="input-group">
+            {{ form.content_count.label }}: {{ form.content_count(size=5) }}
+            <button type="button" onclick="generateInputs()">Generate Inputs</button>
+        </div>
+        <!-- Folder Name Input -->
+        <div class="input-group">
+            {{ form.folder_name.label }}: {{ form.folder_name() }}
+        </div>
+        <!-- Custom Folder Path Input (Optional) -->
+        <div class="input-group">
+            Custom Folder Path (Optional): <input type="text" name="custom_folder_path" placeholder="Enter custom folder path">
+        </div>
+        <!-- Input Container for File Content and Filenames -->
+        <div id="input-container"></div>
+        <!-- Submit Button -->
+        {{ form.submit() }}
+    </form>
+
+    <script>
+        // JavaScript function to generate input fields dynamically
+        function generateInputs() {
+            const count = document.getElementById('content_count').value || 0;
+            const container = document.getElementById('input-container');
+            const defaultFilenames = {{ default_filenames|tojson }};
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const filename = defaultFilenames.length > i ? defaultFilenames[i] : `file_${i+1}`;
+                container.innerHTML += `<div class="input-group">
+                    Content for File ${i+1}: <textarea name="content"></textarea>
+                    Filename: <input type="text" name="filename" value="${filename}" placeholder="Filename for file ${i+1}">
+                </div>`;
+            }
+        }
+    </script>
+</body>
+</html>
